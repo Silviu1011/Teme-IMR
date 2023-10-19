@@ -9,8 +9,7 @@ public class HandleThrowEvent : MonoBehaviour
     bool error;
     GameObject board;
     ParticleSystem ps;
-    int score = 0;
-    UIManager manager;
+    ScoreManager manager;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +17,8 @@ public class HandleThrowEvent : MonoBehaviour
         board = GameObject.FindWithTag("board");
         targetHit = false;
         error = false;
-        manager = FindObjectOfType<UIManager>();
+        manager = FindObjectOfType<ScoreManager>();
+        Debug.Log(manager);
         ps = board.GetComponent<ParticleSystem>();
         ps.Stop();
     }
@@ -34,9 +34,7 @@ public class HandleThrowEvent : MonoBehaviour
                 ps.Play();
                 float distance = Vector3.Distance(GameObject.FindWithTag(handTag).transform.position, board.transform.position);
                 int points = (int)(distance * 10);
-                Debug.Log(score + " " + points);
-                score = score + points;
-                manager.updateScore(score);
+                manager.addScore(points);
                 targetHit = false;
                 error = true;
             } else if(error) {
