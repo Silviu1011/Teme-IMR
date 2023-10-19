@@ -8,6 +8,9 @@ public class HandleThrowEvent : MonoBehaviour
     bool targetHit;
     bool error;
     GameObject board;
+    ParticleSystem ps;
+    int score = 0;
+    UIManager manager;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +18,9 @@ public class HandleThrowEvent : MonoBehaviour
         board = GameObject.FindWithTag("board");
         targetHit = false;
         error = false;
+        manager = FindObjectOfType<UIManager>();
+        ps = board.GetComponent<ParticleSystem>();
+        ps.Stop();
     }
 
     // Update is called once per frame
@@ -25,8 +31,12 @@ public class HandleThrowEvent : MonoBehaviour
         } else if(Input.GetKeyUp("g")) {
             if(targetHit && !error) {
                 Debug.Log("The dart made collision with the board");
-                Debug.Log("Hand position (" + handTag +"): " + GameObject.FindWithTag(handTag).transform.position);
-                Debug.Log("Board position: " + board.transform.position);
+                ps.Play();
+                float distance = Vector3.Distance(GameObject.FindWithTag(handTag).transform.position, board.transform.position);
+                int points = (int)(distance * 10);
+                Debug.Log(score + " " + points);
+                score = score + points;
+                manager.updateScore(score);
                 targetHit = false;
                 error = true;
             } else if(error) {
